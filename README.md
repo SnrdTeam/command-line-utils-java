@@ -6,6 +6,10 @@ Utilities for creating command line applications
 In build.gradle file add
 
 ```gradle
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     compile 'com.adeptik:CommandLineUtils:1.0.1'
 }

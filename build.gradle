@@ -2,7 +2,8 @@ group 'com.adeptik'
 version '1.0.1'
 
 apply plugin: 'java'
-apply plugin: 'maven-publish'
+apply plugin: 'maven'
+apply plugin: 'signing'
 
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
@@ -15,38 +16,63 @@ dependencies {
 
 }
 
-task javadocJar(type: Jar, dependsOn: 'javadoc') {
-    group = 'documentation'
-
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
     from javadoc
 }
-task sourceJar(type: Jar) {
-    group = 'build'
 
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
     from sourceSets.main.allSource
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
+artifacts {
+    archives javadocJar, sourcesJar
+}
 
-            artifact sourceJar {
-                classifier "sources"
-            }
+signing {
+    sign configurations.archives
+}
 
-            artifact javadocJar {
-                classifier "javadoc"
-            }
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-            pom.withXml {
-                asNode().with {
-                    appendNode('name', 'Adeptik Command Line Utils')
-                    appendNode('description', 'Utilities for creating command line applications')
-                    appendNode('url', 'https://github.com/SnrdTeam/command-line-utils-java')
-                    appendNode('licenses').appendNode('license').with {
-                        appendNode('name', 'Apache 2.0')
-                        appendNode('url', 'https://github.com/SnrdTeam/command-line-utils-java/blob/master/LICENSE')
+            repository(url: "file://D:/Temp/.m2/repository/")
+//            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+//                authentication(userName: ossrhUsername, password: ossrhPassword)
+//            }
+//
+//            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+//                authentication(userName: ossrhUsername, password: ossrhPassword)
+//            }
+
+            pom.project {
+                name 'Adeptik Command Line Utils'
+                packaging 'jar'
+                // optionally artifactId can be defined here
+                description 'Utilities for creating command line applications.'
+                url 'https://github.com/SnrdTeam/command-line-utils-java'
+
+                scm {
+                    connection 'scm:git:git://github.com/SnrdTeam/command-line-utils-java.git'
+                    developerConnection 'scm:git:ssh://github.com:SnrdTeam/command-line-utils-java.git'
+                    url 'https://github.com/SnrdTeam/command-line-utils-java.git'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'adeptik'
+                        name 'Adeptik'
+                        email 'infocorp@adeptik.com'
                     }
                 }
             }
