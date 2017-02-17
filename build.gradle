@@ -91,6 +91,11 @@ uploadArchives {
     }
 }
 
+nexusStaging {
+    numberOfRetries = 10
+    delayBetweenRetriesInMillis = 5000
+}
+
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
