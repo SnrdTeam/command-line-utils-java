@@ -1,24 +1,14 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        //Needed only for SNAPSHOT versions
-        //maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
-    }
-    dependencies {
-        classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.5.3"
-    }
-}
 
 group 'com.adeptik'
 version '1.0.1'
 
 apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'signing'
-apply plugin: 'io.codearte.nexus-staging'
+apply from: 'https://raw.githubusercontent.com/SnrdTeam/gradle-utils/master/ossrh-publish.gradle'
+apply from: 'https://raw.githubusercontent.com/SnrdTeam/gradle-utils/master/java-extensions.gradle'
 
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
+javaExtensions.setDefaultEncoding("UTF-8")
 
 repositories {
     mavenCentral()
@@ -28,36 +18,11 @@ dependencies {
 
 }
 
-task javadocJar(type: Jar) {
-    classifier = 'javadoc'
-    from javadoc
-}
-
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-artifacts {
-    archives javadocJar, sourcesJar
-}
-
-signing {
-    sign configurations.archives
-}
-
 uploadArchives {
+
     repositories {
+
         mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
 
             pom.project {
                 name 'Adeptik Command Line Utils'
@@ -89,17 +54,4 @@ uploadArchives {
             }
         }
     }
-}
-
-nexusStaging {
-    numberOfRetries = 10
-    delayBetweenRetriesInMillis = 5000
-}
-
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-}
-
-tasks.withType(Javadoc) {
-    options.encoding = 'UTF-8'
 }
