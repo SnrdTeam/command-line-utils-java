@@ -27,7 +27,8 @@ public final class PrintStreamExtensions {
             String indent = "";
             for (Throwable e = throwable; e != null; e = e.getCause()) {
                 printStream.print(indent);
-                printStream.println(e.getMessage());
+                String message = e.getMessage();
+                printStream.println(message != null ? message : e.getClass().getName());
                 indent += causeIndent;
             }
         }
