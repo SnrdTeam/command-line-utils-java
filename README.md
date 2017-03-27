@@ -1,11 +1,12 @@
 # Adeptik Command Line Utils for Java
-Utilities for creating command line applications
 
-## Installation
+Набор утилит для создания консольных приложений для Java.
 
-In build.gradle file add
+## Использование
 
-```gradle
+В файле build.gradle добавьте
+
+```groovy
 repositories {
     mavenCentral()
 }
@@ -15,7 +16,7 @@ dependencies {
 }
 ```
 
-## License
+## Лицензия
 
 Copyright 2017 Adeptik
 
