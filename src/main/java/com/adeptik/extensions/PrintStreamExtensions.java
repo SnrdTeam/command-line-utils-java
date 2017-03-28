@@ -3,6 +3,10 @@ package com.adeptik.extensions;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 
+/**
+ * Утилиты для {@link PrintStream}
+ */
+@SuppressWarnings({"unused", "WeakerAccess"})
 public final class PrintStreamExtensions {
 
     /**
